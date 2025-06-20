@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import api from '../service/axios';
-
+import useAuthStore from '../store/authStore';
+import { PacmanLoader } from 'react-spinners';
 const AppliedJobs = ({ setShowAppliedJobs, showAppliedJobs }) => {
   const [appliedJobs, setAppliedJobs] = useState([]);
-
+  // const setLoading = useAuthStore((state) => state.setLoading);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchAppliedJobs = async () => {
       try {
+        setLoading(true);
         const res = await api.get('/myappliedjobs');
         setAppliedJobs(res.data);
-        console.log(res.data);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch applied jobs:', error);
+
       }
+
     };
 
     fetchAppliedJobs();
@@ -23,8 +28,12 @@ const AppliedJobs = ({ setShowAppliedJobs, showAppliedJobs }) => {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+      {
+        loading && <div className="fixed inset-0 bg-black/40 z-[1000] flex items-center justify-center">
+        <PacmanLoader color="#36d7b7" size={25} />
+      </div>
+      }
       <div className="relative bg-white border p-6 pt-10 rounded-lg w-[90%] max-w-2xl max-h-[90vh]">
-        {/* Fixed close button */}
         <button
           onClick={() => setShowAppliedJobs(!showAppliedJobs)}
           className="absolute top-4 right-4 text-2xl font-bold text-gray-700 hover:text-red-600"

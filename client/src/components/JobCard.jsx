@@ -10,7 +10,6 @@ const JobCard = ({ job }) => {
     return new Date(dateStr).toLocaleDateString('en-IN');
   };
 
-  // Check if already applied
   useEffect(() => {
     const checkApplicationStatus = async () => {
       try {

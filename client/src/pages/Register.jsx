@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signup } from '../service/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAuthStore from '../store/authStore';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -12,7 +13,8 @@ const Register = () => {
         role: "jobseeker"
     });
 
-    const [loading, setLoading] = useState(false);
+    const {loading} = useAuthStore();
+    const setLoading = useAuthStore((state) => state.setLoading);
     const navigate = useNavigate();
 
     const handleChange = (e) => {

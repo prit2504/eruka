@@ -6,14 +6,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
-  const { user, fetchUser } = useAuthStore();
+  const { user, fetchUser, loading} = useAuthStore();
+  const setLoading = useAuthStore((state) => state.setLoading);
+  const [ploading, setPLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
   });
 
-  const [loading, setLoading] = useState(false);
 
   const [profileData, setProfileData] = useState({
     about: '',
@@ -27,7 +28,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        setLoading(true);
+        setPLoading(true);
         const res1 = await api.get("/profile/getProfile");
         const res2 = await api.get("/me");
 
@@ -55,7 +56,7 @@ const Profile = () => {
         console.error("Error fetching profile data:", err);
       }
       finally {
-        setLoading(false);
+        setPLoading(false);
       }
     };
 
@@ -75,18 +76,23 @@ const Profile = () => {
   const handleBasicSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       await api.put('/updateDetail', formData);
+      setLoading(false);
       toast.success('Basic details updated!');
     } catch (err) {
       toast.error('Failed to update basic details.');
     }
+
   };
 
   const handleDetailSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       await api.post('/profile/jobseeker', profileData);
       toast.success('Profile details updated!');
+      setLoading(false);
     } catch (err) {
       toast.error('Failed to update profile details.');
     }
@@ -100,14 +106,13 @@ const Profile = () => {
   return (
     <div className="pt-24 px-2 sm:px-8 py-8 bg-gradient-to-br from-blue-50 to-yellow-50 min-h-screen flex flex-col items-center">
       <ToastContainer position="top-right" autoClose={3000} />
-      {loading && (
+      {ploading && (
         <div className="fixed w-full left-0 min-h-screen top-0 flex justify-center items-center bg-white/60 z-50">
           <PacmanLoader color="#3B82F6" size={20} />
         </div>
       )}
 
       <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
-        {/* Sidebar */}
         <aside className="bg-gradient-to-b from-blue-500 to-blue-400 text-white flex flex-col items-center justify-center p-8">
           <div className="w-28 h-28 rounded-full bg-white flex items-center justify-center text-blue-600 text-4xl font-bold shadow-lg mb-4">
             {getInitials(formData.name)}
@@ -123,9 +128,7 @@ const Profile = () => {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 p-6 sm:p-10 bg-white">
-          {/* Basic Info */}
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-blue-600 mb-2">Basic Information</h2>
             <form className="flex flex-col sm:flex-row gap-4 items-center" onSubmit={handleBasicSubmit}>
@@ -166,7 +169,6 @@ const Profile = () => {
 
           <hr className="my-6 border-blue-100" />
 
-          {/* Profile Details */}
           <section>
             <h2 className="text-2xl font-bold text-blue-600 mb-2">Profile Details</h2>
             <form className="flex flex-col gap-4" onSubmit={handleDetailSubmit}>

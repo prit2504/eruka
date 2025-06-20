@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 const LogoutButton = () => {
   const logout = useAuthStore((state) => state.logout);
+  const setLoading = useAuthStore((state) => state.setLoading);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    setLoading(true);
     await logout();
+    setLoading(false);
     navigate('/');
   };
 

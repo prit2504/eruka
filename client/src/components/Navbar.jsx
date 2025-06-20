@@ -29,7 +29,6 @@ const Navbar = () => {
           </Link>
 
           <div className='flex items-center gap-4 sm:gap-6'>
-            {/* Nav Links - Desktop */}
             <div className='hidden sm:flex gap-4'>
               {navLinks.map((link) => (
                 <Link
@@ -46,7 +45,6 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* Authenticated User */}
             {user ? (
               <>
                 <Link
@@ -92,7 +90,6 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Toggle Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className='text-blue-600 text-xl border px-3 py-1 rounded-md bg-white shadow hover:bg-gray-100 transition sm:hidden'
@@ -103,7 +100,6 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Dropdown Menu - Mobile */}
       {isMenuOpen && (
         <div className='fixed top-20 right-4 w-40 bg-white rounded-lg shadow-md z-50 border sm:hidden'>
           {navLinks.map((link) => (

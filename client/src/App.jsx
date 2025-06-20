@@ -11,6 +11,7 @@ import CustomerRoute from './routes/CustomerRoute';
 import ProviderRoute from './routes/ProviderRoute';
 import Profile from './pages/Profile';
 import RecruiterProfile from './pages/RecruiterProfile';
+import { PacmanLoader } from 'react-spinners';
 
 import { Navigate } from 'react-router-dom';
 import About from './pages/About';
@@ -19,13 +20,21 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-  const { user, loading, fetchUser } = useAuthStore();
+  const { user,fetchUser } = useAuthStore();
+  const loading = useAuthStore((state) => state.loading);
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
+
     <div className='min-h-screen'>
+      {loading && (
+        <div className="fixed w-full left-0 min-h-screen top-0 flex justify-center items-center backdrop-blur-sm bg-white/30 z-50">
+          <PacmanLoader color="#3B82F6" size={20} />
+        </div>
+      )}
       <ToastContainer position="top-right" autoClose={3000} />
 
       <Router>

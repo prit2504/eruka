@@ -4,8 +4,8 @@ import api from '../service/axios';
 import { PacmanLoader } from 'react-spinners';
 
 const RecruiterProfile = () => {
-  const { user } = useAuthStore();
-
+  const { user, loading } = useAuthStore();
+  const setLoading = useAuthStore((state) => state.setLoading);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,14 +19,14 @@ const RecruiterProfile = () => {
     about: ''
   });
 
-  const [loading, setLoading] = useState(false);
+  const [ploading, setPLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     const fetchRecruiterData = async () => {
       try {
-        setLoading(true);
+        setPLoading(true);
         const res1 = await api.get('/profile/getRecruiterProfile');
         const res2 = await api.get('/me');
 
@@ -53,7 +53,7 @@ const RecruiterProfile = () => {
         setErrorMsg("Error fetching profile data.");
         console.error('Error fetching recruiter data:', err?.response?.data || err.message);
       } finally {
-        setLoading(false);
+        setPLoading(false);
       }
     };
 
@@ -85,8 +85,11 @@ const RecruiterProfile = () => {
     setSuccessMsg('');
     setErrorMsg('');
     try {
+      setLoading(true);
       await api.put('/updateDetail', formData);
+      setLoading(false);
       setSuccessMsg('Basic details updated!');
+      
     } catch (err) {
       console.error(err?.response?.data || err.message);
       setErrorMsg('Failed to update basic details.');
@@ -96,8 +99,10 @@ const RecruiterProfile = () => {
   const handleCompanySubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       await api.post('/profile/recruiter', companyData); 
       setSuccessMsg('Company info updated!');
+      setLoading(false)
     } catch (err) {
       console.error(err?.response?.data || err.message);
       setErrorMsg("Failed to update company info.");
@@ -111,14 +116,13 @@ const RecruiterProfile = () => {
 
   return (
     <div className="pt-24 px-2 sm:px-8 py-8 bg-gradient-to-br from-blue-50 to-yellow-50 min-h-screen flex flex-col items-center">
-      {loading && (
+      {ploading && (
         <div className="fixed w-full left-0 min-h-screen top-0 flex justify-center items-center bg-white/60 z-50">
           <PacmanLoader color="#3B82F6" size={20} />
         </div>
       )}
 
       <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl flex flex-col overflow-hidden">
-        {/* Sidebar */}
         <aside className="bg-gradient-to-b from-blue-500 to-blue-400 text-white flex flex-col items-center justify-center p-8 ">
           <div className="w-28 h-28 rounded-full bg-white flex items-center justify-center text-blue-600 text-4xl font-bold shadow-lg mb-4">
             {getInitials(formData.name)}
@@ -134,7 +138,6 @@ const RecruiterProfile = () => {
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 p-6 sm:p-10 bg-white">
           {(successMsg || errorMsg) && (
             <div className={`mb-4 px-4 py-2 rounded-lg text-center font-semibold transition-all duration-300
@@ -144,7 +147,6 @@ const RecruiterProfile = () => {
             </div>
           )}
 
-          {/* Basic Info */}
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-blue-600 mb-2">Basic Information</h2>
             <form className="flex flex-col sm:flex-row gap-4 items-center" onSubmit={handleBasicSubmit}>
@@ -185,7 +187,6 @@ const RecruiterProfile = () => {
 
           <hr className="my-6 border-blue-100" />
 
-          {/* Company Info */}
           <section>
             <h2 className="text-2xl font-bold text-blue-600 mb-2">Company Details</h2>
             <form className="flex flex-col gap-4" onSubmit={handleCompanySubmit}>

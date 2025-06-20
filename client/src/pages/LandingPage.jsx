@@ -61,7 +61,6 @@ const LandingPage = () => {
         Get Started
       </motion.button>
 
-      {/* Scroll effect section */}
       <motion.div
         ref={ref}
         className="max-w-2xl w-full mt-24 bg-white rounded-2xl p-8 shadow-2xl border-t-8 border-blue-500"

@@ -1,12 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../service/axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import useAuthStore from '../store/authStore';
 
 const Recruiter_ReviewApps = () => {
+  
+  const setLoading = useAuthStore((state) => state.setLoading);
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState({});
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [fullProfile, setFullProfile] = useState(null);
+
 
   const fetchJobsAndApplications = useCallback(async () => {
     try {
@@ -25,6 +31,7 @@ const Recruiter_ReviewApps = () => {
 
     } catch (error) {
       console.error('Error loading data:', error);
+      toast.error('Failed to load jobs and applications.');
     }
   }, []);
 
@@ -41,8 +48,10 @@ const Recruiter_ReviewApps = () => {
         delete newApps[jobId];
         return newApps;
       });
+      toast.success('Job post deleted.');
     } catch (error) {
       console.error('Delete failed:', error);
+      toast.error('Failed to delete job post.');
     }
   };
 
@@ -51,9 +60,10 @@ const Recruiter_ReviewApps = () => {
       await api.put(`/applications/${appId}/status`, { status });
       const updated = await api.get(`/applications/${jobId}`);
       setApplications((prev) => ({ ...prev, [jobId]: updated.data }));
-
+      toast.success(`Applicant ${status}.`);
     } catch (error) {
       console.error('Status update failed:', error);
+      toast.error('Failed to update applicant status.');
     }
   };
 
@@ -63,6 +73,7 @@ const Recruiter_ReviewApps = () => {
       setFullProfile(res.data.profile);
     } catch (err) {
       console.error('Full profile fetch failed:', err);
+      toast.error('Failed to fetch full profile.');
     }
   };
 
@@ -70,6 +81,7 @@ const Recruiter_ReviewApps = () => {
 
   return (
     <div className="p-4">
+      <ToastContainer position="top-right" autoClose={3000} />
       <ul className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {jobs.map((job) => (
           <li

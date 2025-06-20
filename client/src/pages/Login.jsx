@@ -12,10 +12,10 @@ const Login = () => {
         role: "jobseeker"
     });
 
-    const { user } = useAuthStore();
+    const { user, loading } = useAuthStore();
     const setUser = useAuthStore((state) => state.setUser);
+    const setLoading = useAuthStore((state) => state.setLoading);
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

@@ -8,14 +8,12 @@ const Home = () => {
   const [jobList, setJobList] = useState([]);
   const [showAppliedJobs, setShowAppliedJobs] = useState(false);
 
-  // Filter state
   const [filter, setFilter] = useState({
     type: [],
     location: [],
     salary: []
   });
 
-  // Apply filters to jobList
   const applyFilters = (jobs) => {
     return jobs.filter((job) => {
       const matchType =

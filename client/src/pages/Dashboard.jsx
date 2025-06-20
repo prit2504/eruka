@@ -35,7 +35,6 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/* Content Section */}
       <div className='w-full md:w-3/4'>
         {activeView === 'postJob' && <Recruiter_PostJob />}
         {activeView === 'reviewApps' && <Recruiter_ReviewApps />}

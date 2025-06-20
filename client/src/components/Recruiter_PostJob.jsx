@@ -95,7 +95,6 @@ const Recruiter_PostJob = () => {
           <option value='work-from-office'>Work from office</option>
           <option value='work-from-home'>Work from home</option>
           <option value='hybrid'>Hybrid</option>
-          {/* <option value='freelance'>Freelance</option> */}
         </select>
 
         <input
